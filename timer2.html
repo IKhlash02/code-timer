@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer Estimasi Pengerjaan - Gaya Pixel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive; /* Pixel font */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            image-rendering: pixelated; /* Ensures images (if any) are pixelated */
+        }
+        .pixel-border {
+            border-style: solid;
+            border-width: 4px;
+            border-image-slice: 2;
+            border-image-width: 2;
+            border-image-repeat: stretch;
+            border-image-source: url('data:image/svg+xml;utf8,<svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H2V2H0V0Z" fill="%232c2c2c"/><path d="M2 0H4V2H2V0Z" fill="white"/><path d="M4 0H6V2H4V0Z" fill="%232c2c2c"/><path d="M0 2H2V4H0V2Z" fill="white"/><path d="M2 2H4V4H2V2Z" fill="%238a8a8a"/><path d="M4 2H6V4H4V2Z" fill="white"/><path d="M0 4H2V6H0V4Z" fill="%232c2c2c"/><path d="M2 4H4V6H2V4Z" fill="white"/><path d="M4 4H6V6H4V4Z" fill="%232c2c2c"/></svg>');
+            border-image-outset: 2;
+        }
+
+        .pixel-border-inset {
+            border-style: solid;
+            border-width: 4px;
+            border-image-slice: 2;
+            border-image-width: 2;
+            border-image-repeat: stretch;
+            border-image-source: url('data:image/svg+xml;utf8,<svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H2V2H0V0Z" fill="white"/><path d="M2 0H4V2H2V0Z" fill="%232c2c2c"/><path d="M4 0H6V2H4V0Z" fill="white"/><path d="M0 2H2V4H0V2Z" fill="%232c2c2c"/><path d="M2 2H4V4H2V2Z" fill="%238a8a8a"/><path d="M4 2H6V4H4V2Z" fill="%232c2c2c"/><path d="M0 4H2V6H0V4Z" fill="white"/><path d="M2 4H4V6H2V4Z" fill="%232c2c2c"/><path d="M4 4H6V6H4V4Z" fill="white"/></svg>');
+             border-image-outset: 2;
+        }
+
+        select, input[type="number"] {
+            font-family: 'Press Start 2P', cursive;
+            image-rendering: pixelated;
+        }
+        /* Remove default browser appearance for select */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"><polygon points="0,0 16,0 8,16"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 8px 8px; /* Pixelated arrow */
+        }
+        .button-pixel {
+            box-shadow: 4px 4px 0px #2c2c2c; /* Hard shadow for pixel effect */
+            transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+        }
+        .button-pixel:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #2c2c2c;
+        }
+        .text-shadow-pixel {
+            text-shadow: 2px 2px 0px #22222280; /* Subtle text shadow */
+        }
+        .timer-text-pixel {
+            /* Gradient for pixel text can be tricky, solid color might be better for pixel aesthetic */
+            color: #FFD700; /* Gold color for timer */
+            text-shadow: 2px 2px #DAA520, 4px 4px #8B4513; /* 3D pixel text effect */
+        }
+        .timer-text-pixel-done {
+            color: #FF6347; /* Tomato color for timer done */
+            text-shadow: 2px 2px #CD5C5C, 4px 4px #8B0000; /* 3D pixel text effect for done state */
+        }
+
+        .input-icon-pixel {
+            position: absolute;
+            left: 0.5rem; /* 8px */
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            width: 16px; /* Pixel icon size */
+            height: 16px; /* Pixel icon size */
+        }
+        .input-field-padding-pixel {
+            padding-left: 2rem; /* 32px, to make space for the 16px icon + padding */
+        }
+
+    </style>
+</head>
+<body class="bg-[#2A3447] flex items-center justify-center min-h-screen p-4 selection:bg-[#FFD700] selection:text-black">
+
+    <div class="bg-[#4A5A71] p-6 sm:p-8 rounded-none shadow-none w-full max-w-lg pixel-border">
+        
+        <h1 class="text-xl sm:text-2xl font-normal text-[#E0E0E0] text-center mb-6 text-shadow-pixel tracking-normal">
+            <span class="inline-block align-middle"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline-block mr-2 -mt-1 text-[#FFD700]">
+                    <rect x="4" y="2" width="16" height="20" fill="#7A8A99"/>
+                    <rect x="6" y="4" width="12" height="14" fill="#E0E0E0"/>
+                    <rect x="11" y="6" width="2" height="6" fill="#2A3447"/>
+                    <rect x="11" y="11" width="5" height="2" fill="#2A3447"/>
+                    <rect x="5" y="3" width="2" height="2" fill="#2A3447"/>
+                    <rect x="17" y="3" width="2" height="2" fill="#2A3447"/>
+                </svg>
+            </span>
+            Estimasi Waktu & Timer
+        </h1>
+
+        <div class="space-y-5">
+            <div>
+                <label for="difficulty" class="block text-xs text-[#B0B0B0] mb-1.5">Kesulitan:</label>
+                <div class="relative">
+                    <div class="input-icon-pixel">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="4" height="16" fill="#7A8A99"/>
+                            <rect x="6" width="4" height="12" transform="translate(0 4)" fill="#7A8A99"/>
+                            <rect x="12" width="4" height="8" transform="translate(0 8)" fill="#7A8A99"/>
+                        </svg>
+                    </div>
+                    <select id="difficulty" class="w-full p-3 text-sm bg-[#3A4A5F] text-[#E0E0E0] border-2 border-[#2c2c2c] focus:border-[#FFD700] focus:outline-none rounded-none input-field-padding-pixel">
+                        <option value="easy">Mudah</option>
+                        <option value="medium">Sedang</option>
+                        <option value="hard">Sulit</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label for="acceptanceRate" class="block text-xs text-[#B0B0B0] mb-1.5">Acceptance Rate (%):</label>
+                 <div class="relative">
+                    <div class="input-icon-pixel">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect y="12" width="2" height="4" fill="#7A8A99"/>
+                            <rect x="3" y="8" width="2" height="8" fill="#7A8A99"/>
+                            <rect x="6" y="4" width="2" height="12" fill="#7A8A99"/>
+                            <rect x="9" y="6" width="2" height="10" fill="#7A8A99"/>
+                            <rect x="12" y="10" width="2" height="6" fill="#7A8A99"/>
+                            <path d="M0 0H1V14H0V0Z" fill="#2c2c2c"/>
+                            <path d="M0 14H14V15H0V14Z" fill="#2c2c2c"/>
+                        </svg>
+                    </div>
+                    <input type="number" id="acceptanceRate" min="0" max="100" step="1" value="50" class="w-full p-3 text-sm bg-[#3A4A5F] text-[#E0E0E0] border-2 border-[#2c2c2c] focus:border-[#FFD700] focus:outline-none rounded-none input-field-padding-pixel">
+                </div>
+            </div>
+        </div>
+
+        <button id="startButton" class="w-full bg-[#FF8C00] hover:bg-[#FFA500] text-black font-normal py-3 px-4 mt-8 rounded-none border-2 border-black button-pixel text-sm disabled:opacity-70 disabled:cursor-not-allowed">
+            Mulai Timer
+        </button>
+
+        <div id="errorDisplay" class="text-[#FF6347] text-xs mt-4 min-h-[1em] text-center"></div>
+        
+        <div id="timerDisplay" class="text-5xl sm:text-6xl font-normal text-center mt-6 p-4 bg-[#3A4A5F] rounded-none pixel-border-inset timer-text-pixel">
+            00:00
+        </div>
+         <div id="estimatedTimeDisplay" class="text-xs text-[#B0B0B0] text-center mt-2 min-h-[1em]"></div>
+    </div>
+
+    <script>
+        // JavaScript code (mostly unchanged, only style class adjustments if needed)
+        let timerInterval = null; 
+        let totalSecondsCalculated = 0; 
+
+        const difficultySelect = document.getElementById('difficulty');
+        const acceptanceRateInput = document.getElementById('acceptanceRate');
+        const startButton = document.getElementById('startButton');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const errorDisplay = document.getElementById('errorDisplay');
+        const estimatedTimeDisplay = document.getElementById('estimatedTimeDisplay');
+
+        function calculateTimeInSeconds(difficulty, acceptanceRate) {
+            const baseTimeMinutes = { "easy": 30, "medium": 40, "hard": 50 };
+            if (!baseTimeMinutes[difficulty.toLowerCase()]) {
+                errorDisplay.textContent = "Kesulitan tidak valid.";
+                return NaN;
+            }
+            const baseMinutes = baseTimeMinutes[difficulty.toLowerCase()];
+            let multiplier;
+            if (acceptanceRate >= 60) multiplier = 1.10;
+            else if (acceptanceRate >= 40) multiplier = 1.20;
+            else if (acceptanceRate >= 20) multiplier = 1.50;
+            else multiplier = 2.00;
+            const totalMinutes = baseMinutes * multiplier;
+            return Math.round(totalMinutes * 60);
+        }
+
+        function updateTimerDisplayDOM(currentTimeInSeconds) { // Renamed to avoid conflict
+            const minutes = Math.floor(currentTimeInSeconds / 60);
+            const seconds = currentTimeInSeconds % 60;
+            const formattedMinutes = String(minutes).padStart(2, '0');
+            const formattedSeconds = String(seconds).padStart(2, '0');
+            timerDisplay.textContent = `${formattedMinutes}:${formattedSeconds}`;
+        }
+        
+        function displayEstimatedTime(totalSeconds) {
+            if (isNaN(totalSeconds) || totalSeconds <= 0) {
+                estimatedTimeDisplay.textContent = "";
+                return;
+            }
+            const totalMinutes = totalSeconds / 60;
+            estimatedTimeDisplay.textContent = `Estimasi: ${totalMinutes.toFixed(2)} mnt`;
+        }
+
+        function countdown() {
+            if (totalSecondsCalculated <= 0) {
+                clearInterval(timerInterval);
+                timerDisplay.textContent = "HABIS!";
+                startButton.disabled = false; 
+                estimatedTimeDisplay.textContent = "Timer Selesai.";
+                timerDisplay.classList.remove('timer-text-pixel');
+                timerDisplay.classList.add('timer-text-pixel-done');
+                return;
+            }
+            updateTimerDisplayDOM(totalSecondsCalculated);
+            totalSecondsCalculated--; 
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            errorDisplay.textContent = ''; 
+            estimatedTimeDisplay.textContent = '';
+            timerDisplay.classList.remove('timer-text-pixel-done');
+            timerDisplay.classList.add('timer-text-pixel');
+
+            const difficulty = difficultySelect.value;
+            const acceptanceRate = parseFloat(acceptanceRateInput.value);
+
+            if (isNaN(acceptanceRate) || acceptanceRate < 0 || acceptanceRate > 100) {
+                errorDisplay.textContent = "Rate: 0-100.";
+                timerDisplay.textContent = "00:00"; 
+                return;
+            }
+
+            totalSecondsCalculated = calculateTimeInSeconds(difficulty, acceptanceRate);
+
+            if (isNaN(totalSecondsCalculated) || totalSecondsCalculated <= 0) {
+                 errorDisplay.textContent = errorDisplay.textContent || "Gagal hitung.";
+                 timerDisplay.textContent = "00:00"; 
+                 return;
+            }
+            
+            updateTimerDisplayDOM(totalSecondsCalculated);
+            displayEstimatedTime(totalSecondsCalculated);
+            timerInterval = setInterval(countdown, 1000); 
+            startButton.disabled = true; 
+        }
+
+        startButton.addEventListener('click', startTimer);
+        
+        function previewEstimatedTime() {
+            timerDisplay.classList.remove('timer-text-pixel-done');
+            timerDisplay.classList.add('timer-text-pixel');
+
+            const difficulty = difficultySelect.value;
+            const acceptanceRate = parseFloat(acceptanceRateInput.value);
+
+            if (isNaN(acceptanceRate) || acceptanceRate < 0 || acceptanceRate > 100) {
+                if (document.activeElement !== acceptanceRateInput || acceptanceRateInput.value.length > 0) { 
+                     estimatedTimeDisplay.textContent = "Rate: 0-100.";
+                } else {
+                    estimatedTimeDisplay.textContent = "";
+                }
+                timerDisplay.textContent = "00:00";
+                return;
+            }
+            const previewSeconds = calculateTimeInSeconds(difficulty, acceptanceRate);
+            if (isNaN(previewSeconds) || previewSeconds <= 0) {
+                estimatedTimeDisplay.textContent = "Tidak bisa estimasi.";
+                timerDisplay.textContent = "00:00";
+            } else {
+                updateTimerDisplayDOM(previewSeconds); 
+                displayEstimatedTime(previewSeconds); 
+            }
+        }
+        difficultySelect.addEventListener('change', previewEstimatedTime);
+        acceptanceRateInput.addEventListener('input', previewEstimatedTime);
+        
+        // Initial preview on page load
+        previewEstimatedTime();
+    </script>
+</body>
+</html>

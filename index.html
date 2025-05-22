@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="mainHeader">🎮 Pixel Coding Quest Timer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <h1>PIXEL CODING QUEST </h1>
+        
+        <div class="game-panel">
+            <div class="input-group">
+                <label class="pixel-label" for="difficulty">⚔️ Quest Difficulty</label>
+                <select class="pixel-select" id="difficulty">
+                    <option value="">Select Your Challenge...</option>
+                    <option value="easy">🟢 NOOB MODE (30 min base)</option>
+                    <option value="medium">🟡 WARRIOR MODE (40 min base)</option>
+                    <option value="hard">🔴 LEGEND MODE (50 min base)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="game-panel">
+            <div class="input-group">
+                <label class="pixel-label" for="acceptanceRate">📊 Success Rate (%)</label>
+                <input type="number" class="pixel-input" id="acceptanceRate" 
+                       placeholder="Enter success rate (0-100)" min="0" max="100" step="0.1">
+            </div>
+        </div>
+
+        <button class="quest-btn" onclick="calculateTime()">🚀 START QUEST TIMER</button>
+
+        <div class="result-panel" id="result">
+            <div class="quest-info" id="estimatedTime"></div>
+            
+            <div class="timer-screen">
+                <div class="timer-display" id="timerDisplay">00:00</div>
+            </div>
+            
+            <div class="pixel-progress">
+                <div class="pixel-progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="control-panel">
+                <button class="pixel-btn" id="startBtn" onclick="startTimer()">▶️ START</button>
+                <button class="pixel-btn pause" id="pauseBtn" onclick="pauseTimer()" disabled>⏸️ PAUSE</button>
+                <button class="pixel-btn reset" id="resetBtn" onclick="resetTimer()">🔄 RESET</button>
+            </div>
+            
+            <div class="status-display" id="status"></div>
+        </div>
+    </div>
+
+    <script src="/index.js"> </script>
+</body>
+</html>

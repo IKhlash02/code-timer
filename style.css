@@ -1,0 +1,438 @@
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(45deg, #0f0f23, #1a1a3a);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            background: #4a3a2a; /* Cokelat tua kehangatan */
+            border: 4px solid #6a5a4a; /* Cokelat sedang, border yang lebih hangat */
+            border-radius: 0;
+            padding: 30px;
+            box-shadow:
+                0 0 0 2px #3a2a1a, /* Bayangan luar yang lebih gelap dan hangat */
+                inset 0 0 0 2px #7a6a5a, /* Bayangan dalam yang lebih terang dan hangat */
+                0 8px 0 #3a2a1a, /* Bayangan bawah yang lebih gelap dan hangat */
+                0 12px 20px rgba(0,0,0,0.5); /* Bayangan umum tetap */
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #e76f51, #f4a261, #e9c46a, #2a9d8f);
+            border-radius: 0;
+            z-index: -1;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        /* @keyframes borderGlow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        } */
+
+        h1 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+            text-align: center;
+            text-shadow: 2px 2px 0 #000;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 0 #000, 0 0 10px #4ecdc4; }
+            to { text-shadow: 2px 2px 0 #000, 0 0 20px #4ecdc4, 0 0 30px #4ecdc4; }
+        }
+
+        .game-panel {
+            background: #1a1a3a;
+            border: 3px solid #4a4a6a;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .game-panel::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            border: 1px solid #5a5a7a;
+            pointer-events: none;
+        }
+
+        .input-group {
+            padding: 20px;
+            margin-bottom: 0;
+        }
+
+        .pixel-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #4ecdc4;
+            font-size: 12px;
+            text-shadow: 1px 1px 0 #000;
+            text-transform: uppercase;
+        }
+
+        .pixel-select, .pixel-input {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid #4a4a6a;
+            background: #0f0f23;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .pixel-select:focus, .pixel-input:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 2px #4ecdc4;
+            background: #1a1a3a;
+        }
+
+        .pixel-select option {
+            background: #0f0f23;
+            color: #fff;
+        }
+
+        .quest-btn {
+            background: linear-gradient(180deg, #ff6b6b, #e55353);
+            color: #fff;
+            border: 3px solid #c44141;
+            padding: 15px 25px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 0 #000;
+            position: relative;
+            transition: all 0.1s ease;
+        }
+
+        .quest-btn:hover {
+            background: linear-gradient(180deg, #ff7b7b, #f55353);
+            transform: translateY(-2px);
+        }
+
+        .quest-btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .quest-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: #c44141;
+            transition: all 0.1s ease;
+        }
+
+        .quest-btn:active::after {
+            height: 2px;
+            bottom: -2px;
+        }
+
+        .result-panel {
+            display: none;
+            animation: pixelFadeIn 0.5s ease;
+        }
+
+        .result-panel.show {
+            display: block;
+        }
+
+        @keyframes pixelFadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .quest-info {
+            background: #0f0f23;
+            border: 2px solid #4a4a6a;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #4ecdc4;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .timer-screen {
+            background: #000;
+            border: 4px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        .timer-screen::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,255,0,0.03) 2px,
+                rgba(0,255,0,0.03) 4px
+            );
+            pointer-events: none;
+        }
+
+        .timer-display {
+            font-size: 3.5em;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            font-family: 'Press Start 2P', cursive;
+            margin: 10px 0;
+            animation: digitalGlow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes digitalGlow {
+            from { text-shadow: 0 0 5px #00ff00; }
+            to { text-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00; }
+        }
+
+        .pixel-progress {
+            width: 100%;
+            height: 20px;
+            background: #1a1a3a;
+            border: 2px solid #4a4a6a;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pixel-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            width: 0%;
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .pixel-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 4px,
+                rgba(255,255,255,0.3) 4px,
+                rgba(255,255,255,0.3) 8px
+            );
+            animation: progressScan 2s linear infinite;
+        }
+
+        @keyframes progressScan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .control-panel {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .pixel-btn {
+            background: linear-gradient(180deg, #4ecdc4, #3ba8a8);
+            color: #fff;
+            border: 3px solid #2e8a8a;
+            padding: 12px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 0 #000;
+            position: relative;
+            transition: all 0.1s ease;
+            min-width: 100px;
+        }
+
+        .pixel-btn.pause {
+            background: linear-gradient(180deg, #ffd93d, #e6c236);
+            border-color: #cca62f;
+        }
+
+        .pixel-btn.reset {
+            background: linear-gradient(180deg, #ff6b6b, #e55353);
+            border-color: #c44141;
+        }
+
+        .pixel-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .pixel-btn:active:not(:disabled) {
+            transform: translateY(2px);
+        }
+
+        .pixel-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(50%);
+        }
+
+        .pixel-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: inherit;
+            filter: brightness(0.7);
+            transition: all 0.1s ease;
+        }
+
+        .pixel-btn:active:not(:disabled)::after {
+            height: 2px;
+            bottom: -2px;
+        }
+
+        .status-display {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 10px;
+            border: 2px solid transparent;
+        }
+
+        .status-display.running {
+            color: #00ff00;
+            border-color: #00ff00;
+            background: rgba(0,255,0,0.1);
+            animation: pulse 1s infinite;
+        }
+
+        .status-display.paused {
+            color: #ffd93d;
+            border-color: #ffd93d;
+            background: rgba(255,217,61,0.1);
+        }
+
+        .status-display.finished {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+            background: rgba(255,107,107,0.1);
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-50px) rotate(180deg); opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.2em;
+            }
+            
+            .timer-display {
+                font-size: 2.5em;
+            }
+            
+            .control-panel {
+                flex-direction: column;
+            }
+            
+            .pixel-btn {
+                min-width: auto;
+            }
+        }
