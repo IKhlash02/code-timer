@@ -4,7 +4,6 @@ let timerInterval = null;
 let isRunning = false;
 let isPaused = false;
 
-// Create animated stars background
 function createStars() {
   const starsContainer = document.getElementById("stars");
   const starCount = 100;
@@ -19,7 +18,6 @@ function createStars() {
   }
 }
 
-// Create floating particles
 function createParticle(x, y) {
   const particle = document.createElement("div");
   particle.className = "particle";
@@ -41,7 +39,6 @@ function calculateTime() {
     document.getElementById("acceptanceRate").value
   );
 
-  // Validation with pixel-style alerts
   if (!difficulty) {
     showPixelAlert("⚠️ SELECT QUEST DIFFICULTY!");
     return;
@@ -52,13 +49,11 @@ function calculateTime() {
     return;
   }
 
-  // Create particles effect
   createParticle(
     Math.random() * window.innerWidth,
     Math.random() * window.innerHeight
   );
 
-  // Base time calculation
   const baseTime = {
     easy: 30,
     medium: 40,
@@ -68,22 +63,20 @@ function calculateTime() {
   const baseMinutes = baseTime[difficulty.toLowerCase()];
   let multiplier;
 
-  // Calculate multiplier based on acceptance rate
   if (acceptanceRate >= 60) {
-    multiplier = 1.25; // +25%
+    multiplier = 1;
   } else if (acceptanceRate >= 40) {
-    multiplier = 1.4; // +40%
+    multiplier = 1.2;
   } else if (acceptanceRate >= 20) {
-    multiplier = 1.75; // +75%
+    multiplier = 1.4;
   } else {
-    multiplier = 2.0; // +100%
+    multiplier = 1.6;
   }
 
   const totalMinutes = baseMinutes * multiplier;
   totalSeconds = Math.round(totalMinutes * 60);
   remainingSeconds = totalSeconds;
 
-  // Display result with gaming terminology
   const difficultyNames = {
     easy: "NOOB MODE",
     medium: "WARRIOR MODE",
@@ -98,12 +91,10 @@ function calculateTime() {
   updateTimerDisplay();
   document.getElementById("result").classList.add("show");
 
-  // Reset timer state
   resetTimer();
 }
 
 function showPixelAlert(message) {
-  // Create custom pixel-style alert
   const alert = document.createElement("div");
   alert.style.cssText = `
                 position: fixed;
@@ -139,7 +130,6 @@ function updateTimerDisplay() {
   document.getElementById("timerDisplay").textContent = timeString;
   document.getElementById("mainHeader").textContent = `${timeString}`;
 
-  // Update progress bar
   const progress = ((totalSeconds - remainingSeconds) / totalSeconds) * 100;
   document.getElementById("progressFill").style.width = `${progress}%`;
 }
@@ -206,7 +196,6 @@ function finishTimer() {
   document.getElementById("status").textContent = "🏆 QUEST COMPLETED!";
   document.getElementById("status").className = "status-display finished";
 
-  // Create celebration particles
   for (let i = 0; i < 10; i++) {
     setTimeout(() => {
       createParticle(
@@ -216,7 +205,6 @@ function finishTimer() {
     }, i * 100);
   }
 
-  // Browser notification
   if ("Notification" in window) {
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
@@ -231,10 +219,67 @@ function finishTimer() {
   showPixelAlert("🏆 QUEST COMPLETED!\n⏰ TIME TO SUBMIT!");
 }
 
-// Initialize stars on page load
 createStars();
 
-// Request notification permission on page load
 if ("Notification" in window && Notification.permission === "default") {
   Notification.requestPermission();
 }
+
+const backgroundMusic = document.getElementById("backgroundMusic");
+const musicToggleBtn = document.getElementById("musicToggleBtn");
+let isMusicOn = false;
+
+backgroundMusic.volume = 0.3;
+
+function toggleMusic() {
+  isMusicOn = !isMusicOn;
+
+  if (isMusicOn) {
+    backgroundMusic.play().catch((error) => {
+      console.warn("Musik dicegah bermain otomatis:", error);
+      isMusicOn = false;
+    });
+
+    if (isMusicOn) {
+      musicToggleBtn.textContent = "🎵 Musik: Nyala";
+      musicToggleBtn.classList.remove("off");
+    } else {
+      musicToggleBtn.textContent = "🎵 Musik: Mati";
+      musicToggleBtn.classList.add("off");
+    }
+  } else {
+    backgroundMusic.pause();
+    musicToggleBtn.textContent = "🎵 Musik: Mati";
+    musicToggleBtn.classList.add("off");
+  }
+}
+
+musicToggleBtn.addEventListener("click", toggleMusic);
+
+musicToggleBtn.classList.add("off");
+
+const originalStartTimer = startTimer;
+const originalPauseTimer = pauseTimer;
+const originalResetTimer = resetTimer;
+
+window.startTimer = function () {
+  originalStartTimer();
+  if (isMusicOn) {
+    backgroundMusic.play();
+  }
+};
+
+window.pauseTimer = function () {
+  originalPauseTimer();
+  if (isMusicOn) {
+    backgroundMusic.pause();
+  }
+};
+
+window.resetTimer = function () {
+  originalResetTimer();
+  if (isMusicOn) {
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
+  }
+};
